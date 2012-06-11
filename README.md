@@ -17,7 +17,7 @@ many stuff I don't really need.
       error: "Six chars minimum. Try again."
     }
   }
-  reply.get(options, function(err, answers){
+  reply.get(opts, function(err, answers){
     console.log(answers);
   });
 ````
