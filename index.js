@@ -73,7 +73,7 @@ var get = exports.get = function(options, callback){
 			if (key && key.name == 'enter') {
 				console.log();
 				stdin.removeAllListeners('keypress');
-				tty.setRawMode(false);
+				process.stdin.setRawMode(false);
 				return callback(buf);
 			}
 
@@ -115,7 +115,7 @@ var get = exports.get = function(options, callback){
 			var listener = stdin._events.keypress; // to reassign down later
 			stdin.removeAllListeners('keypress');
 
-			tty.setRawMode(true);
+			process.stdin.setRawMode(true);
 			stdout.write("\n" + prompt);
 
 			wait_for_password(function(reply){
