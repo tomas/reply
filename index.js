@@ -39,7 +39,7 @@ var get = exports.get = function(options, callback){
 	}
 
 	var close_prompt = function(){
-		// stdin.pause();
+		stdin.pause();
 		rl.close();
 	}
 
