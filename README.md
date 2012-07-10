@@ -11,6 +11,9 @@ Install
  npm install reply
 ```
 
+Usage
+-----
+
 ``` js
 var reply = require('reply');
 var opts = {
