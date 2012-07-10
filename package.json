@@ -2,9 +2,11 @@
   "author": "Tomás Pollak <tomas@forkhq.com> (http://forkhq.com)",
   "name": "reply",
   "description": "Create console-based wizards in a snap.",
-  "version": "0.2.0",
+  "keywords" : ["reply", "prompt", "console", "wizard", "input"],
+  "version": "0.2.1",
   "repository": {
-    "url": "https://github.com/tomas/reply"
+    "type": "git", 
+    "url" : "https://github.com/tomas/reply"
   },
   "dependencies": {},
   "devDependencies": {},
