@@ -7,6 +7,10 @@
     "type": "number",
     "options": [1,2,3,4,5]
   },
+  "password": {
+    "type": "password",
+  	"message": "This is just to show reply's silent output."
+  },
   "gender": {
     "message": "What are you? You can skip this one if you want.",
     "options": ["male", "female"],
