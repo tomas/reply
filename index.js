@@ -1,4 +1,9 @@
-var readline = require('readline');
+var rl, readline = require('readline');
+
+var get_interface = function(stdin, stdout){
+	if(!rl) rl = readline.createInterface(stdin, stdout);
+	return rl;
+}
 
 var confirm = exports.confirm = function(message, callback){
 
@@ -158,7 +163,7 @@ var get = exports.get = function(options, callback){
 
 	}
 
-	rl = readline.createInterface(stdin, stdout);
+	rl = get_interface(stdin, stdout);
 	next_question(0);
 
 	rl.on('close', function(){
