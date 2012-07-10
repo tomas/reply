@@ -16,8 +16,8 @@ var confirm = exports.confirm = function(message, callback){
 	}
 
 	get(question, function(err, answer){
-		if(err || (answer.reply !== true && answer.reply !== 'yes')) callback(false);
-		else callback(true);
+		if(err) return callback(err);
+		callback(null, answer.reply === true || answer.reply == 'yes');
 	});
 
 };
@@ -33,8 +33,13 @@ var get = exports.get = function(options, callback){
 	var stdin = process.stdin, stdout = process.stdout;
 	var fields = Object.keys(options);
 
+	var done = function(){
+		close_prompt();
+		callback(null, answers);
+	}
+
 	var close_prompt = function(){
-		stdin.pause();
+		// stdin.pause();
 		rl.close();
 	}
 
@@ -129,7 +134,7 @@ var get = exports.get = function(options, callback){
 		if (prev_key) answers[prev_key] = answer;
 
 		var curr_key = fields[index];
-		if (!curr_key) return close_prompt();
+		if (!curr_key) return done();
 
 		var prompt = (options[curr_key].type == 'confirm') ?
 			' - yes/no: ' : " - " + curr_key + ": ";
@@ -169,11 +174,11 @@ var get = exports.get = function(options, callback){
 	rl.on('close', function(){
 		close_prompt(); // just in case
 
-		var err, given_answers = Object.keys(answers).length;
-		if (fields.length > given_answers)
-			err = new Error("Cancelled after giving " + given_answers + " answers.");
+		var given_answers = Object.keys(answers).length;
+		if (fields.length == given_answers) return;
 
-			callback(err, answers);
+		var err = new Error("Cancelled after giving " + given_answers + " answers.");
+		callback(err, answers);
 	});
 
 }
