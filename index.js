@@ -1,5 +1,4 @@
-var readline = require('readline'),
-    tty = require('tty');
+var readline = require('readline');
 
 var get = exports.get = function(options, callback){
 
@@ -56,11 +55,16 @@ var get = exports.get = function(options, callback){
 	}
 
 	var show_message = function(key){
+
+		var msg = '';
+
 		if (text = options[key].message)
-			stdout.write(text + ' ');
+			msg += text.trim() + ' ';
 
 		if (options[key].options)
-			stdout.write('(options are ' + options[key].options.join(', ') + ')');
+			msg += '(options are ' + options[key].options.join(', ') + ')';
+
+		if(msg != '') stdout.write(msg + "\n");
 	}
 
 	// taken from commander lib
@@ -73,7 +77,7 @@ var get = exports.get = function(options, callback){
 			if (key && key.name == 'enter') {
 				console.log();
 				stdin.removeAllListeners('keypress');
-				tty.setRawMode(false);
+				stdin.setRawMode(false);
 				return callback(buf);
 			}
 
@@ -115,8 +119,8 @@ var get = exports.get = function(options, callback){
 			var listener = stdin._events.keypress; // to reassign down later
 			stdin.removeAllListeners('keypress');
 
-			tty.setRawMode(true);
-			stdout.write("\n" + prompt);
+			stdin.setRawMode(true);
+			stdout.write(prompt);
 
 			wait_for_password(function(reply){
 				stdin._events.keypress = listener; // reassign
@@ -139,9 +143,9 @@ var get = exports.get = function(options, callback){
 	rl.on('close', function(){
 		close_prompt(); // just in case
 
-		var err;
-		if (fields.length > Object.keys(answers).length)
-			err = new Error("Cancelled!");
+		var err, given_answers = Object.keys(answers).length;
+		if (fields.length > given_answers)
+			err = new Error("Cancelled after giving " + given_answers + " answers.");
 
 			callback(err, answers);
 	});
