@@ -1,5 +1,22 @@
 var readline = require('readline');
 
+var confirm = exports.confirm = function(message, callback){
+
+	var question = {
+		'reply': {
+			type: 'confirm',
+			message: message,
+			default: 'yes'
+		}
+	}
+
+	get(question, function(err, answer){
+		if(err || (answer.reply !== true && answer.reply !== 'yes')) callback(false);
+		else callback(true);
+	});
+
+};
+
 var get = exports.get = function(options, callback){
 
 	if(!callback) return; // no point in continuing
@@ -36,12 +53,14 @@ var get = exports.get = function(options, callback){
 
 	var validate = function(key, answer){
 
-		if (!answer)
+		if (typeof answer == 'undefined')
 			return options[key].allow_empty || typeof get_default(key) != 'undefined';
 		else if(regex = options[key].regex)
 			return regex.test(answer);
 		else if(options[key].options)
 			return options[key].options.indexOf(answer) != -1;
+		else if(options[key].type == 'confirm')
+			return typeof(answer) == 'boolean'; // answer was given so it should be
 		else if(options[key].type && options[key].type != 'password')
 			return typeof(answer) == options[key].type;
 
@@ -93,9 +112,10 @@ var get = exports.get = function(options, callback){
 
 	var check_reply = function(index, curr_key, fallback, reply){
 		var answer = guess_type(reply);
+		var return_answer = (typeof answer != 'undefined') ? answer : fallback;
 
 		if (validate(curr_key, answer))
-			next_question(++index, curr_key, answer || fallback);
+			next_question(++index, curr_key, return_answer);
 		else
 			show_error(curr_key) || next_question(index); // repeats current
 	}
@@ -106,7 +126,8 @@ var get = exports.get = function(options, callback){
 		var curr_key = fields[index];
 		if (!curr_key) return close_prompt();
 
-		var prompt = " - " + curr_key + ": ";
+		var prompt = (options[curr_key].type == 'confirm') ?
+			' - yes/no: ' : " - " + curr_key + ": ";
 
 		var fallback = get_default(curr_key);
 		if (typeof(fallback) != 'undefined' && fallback !== '')

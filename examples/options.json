@@ -7,6 +7,11 @@
     "type": "number",
     "options": [1,2,3,4,5]
   },
+  "rockstar": {
+    "type": "confirm",
+    "message": "Are you a rockstar?",
+    "default": "yes"
+  },
   "password": {
     "type": "password",
   	"message": "This is just to show reply's silent output."
