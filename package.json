@@ -1,8 +1,8 @@
 {
   "author": "Tomás Pollak <tomas@forkhq.com> (http://forkhq.com)",
   "name": "reply",
-  "description": "Lighter alternative to prompt for requesting user input.",
-  "version": "0.1.0",
+  "description": "Create console-based wizards in a snap.",
+  "version": "0.2.0",
   "repository": {
     "url": "https://github.com/tomas/reply"
   },
