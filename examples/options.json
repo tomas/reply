@@ -14,7 +14,7 @@
   },
   "password": {
     "type": "password",
-  	"message": "This is just to show reply's silent output."
+    "message": "This is just to show reply's silent output."
   },
   "gender": {
     "message": "What are you? You can skip this one if you want.",
