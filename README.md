@@ -16,6 +16,7 @@ Usage
 
 ``` js
 var reply = require('reply');
+
 var opts = {
   username: {
     message: 'Please type in your username.'
@@ -23,10 +24,11 @@ var opts = {
   password: {
     message: 'Password, please.',
     type: "password",
-    regex: /(\w{6}/,
+    regex: /(\w{6})/,
     error: "Six chars minimum. Try again."
   }
 }
+
 reply.get(opts, function(err, answers){
   console.log(answers);
 });
