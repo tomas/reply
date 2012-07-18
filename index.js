@@ -2,6 +2,7 @@ var rl, readline = require('readline');
 
 var get_interface = function(stdin, stdout){
 	if(!rl) rl = readline.createInterface(stdin, stdout);
+	else stdin.resume(); // interface exists
 	return rl;
 }
 
@@ -97,14 +98,14 @@ var get = exports.get = function(options, callback){
 	}
 
 	// taken from commander lib
-	var wait_for_password = function(callback){
+	var wait_for_password = function(prompt, callback){
 
 		var buf = '', mask = '*';
 
 		stdin.on('keypress', function(c, key){
 
 			if (key && key.name == 'enter') {
-				console.log();
+				stdout.write("\n");
 				stdin.removeAllListeners('keypress');
 				stdin.setRawMode(false);
 				return callback(buf);
@@ -113,8 +114,15 @@ var get = exports.get = function(options, callback){
 			if (key && key.ctrl && key.name == 'c')
 				close_prompt();
 
-			stdout.write(mask);
-			buf += c;
+			if (key && key.name == 'backspace'){
+				buf = buf.substr(0, buf.length-1);
+				var masked = '';
+				for (i = 0; i < buf.length; i++) { masked += mask; }
+				stdout.write('\r\033[2K' + prompt + masked);
+			} else {
+				stdout.write(mask);
+				buf += c;
+			}
 
 		});
 
@@ -153,7 +161,7 @@ var get = exports.get = function(options, callback){
 			stdin.setRawMode(true);
 			stdout.write(prompt);
 
-			wait_for_password(function(reply){
+			wait_for_password(prompt, function(reply){
 				stdin._events.keypress = listener; // reassign
 				check_reply(index, curr_key, fallback, reply)
 			});
