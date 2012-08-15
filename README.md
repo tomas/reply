@@ -43,6 +43,18 @@ reply.get(opts, function(err, answers){
 });
 ```
 
+Examples
+--------
+
+## Confirm (yes/no)
+
+``` js
+reply.confirm('Are you up for it?', function(err, yes){
+  var answer = (!err && yes) ? "That's crack-a-lackin!" : 'Boo-hoo';
+  console.log(answer);
+});
+```
+
 Credits
 -------
 Written by Tomás Pollak.
