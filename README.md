@@ -11,13 +11,13 @@ Features
  - Can check response against regex or array of options.
  - Custom error message for each field, or fallback to 'Invalid value'.
  - Masks password fields with '*', with support for backspace keystrokes.
- - Fields can hold a default value, marked as required or allow an empty response. 
+ - Fields can hold a default value, be marked as required or allow an empty response. 
 
 Install
 -------
 
 ``` sh
- npm install reply
+ $ npm install reply
 ```
 
 Usage
