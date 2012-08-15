@@ -1,8 +1,17 @@
 Reply
 =====
 
-Simple way of getting user input. Prompt is really awesome but it ships with too
-many stuff I don't really need.
+Simple way of getting user input in Node.js. Prompt is really awesome but it ships 
+with too much stuff I don't really need.
+
+Features
+--------
+
+ - Verifies type of response (string, number, boolean), and returns native value.
+ - Can check response against regex or array of options.
+ - Custom error message for each field, or fallback to 'Invalid value'.
+ - Masks password fields with '*', with support for backspace keystrokes.
+ - Fields can hold a default value, marked as required or allow an empty response. 
 
 Install
 -------
