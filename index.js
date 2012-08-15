@@ -1,7 +1,7 @@
 var rl, readline = require('readline');
 
 var get_interface = function(stdin, stdout){
-	if(!rl) rl = readline.createInterface(stdin, stdout);
+	if (!rl) rl = readline.createInterface(stdin, stdout);
 	else stdin.resume(); // interface exists
 	return rl;
 }
@@ -17,7 +17,7 @@ var confirm = exports.confirm = function(message, callback){
 	}
 
 	get(question, function(err, answer){
-		if(err) return callback(err);
+		if (err) return callback(err);
 		callback(null, answer.reply === true || answer.reply == 'yes');
 	});
 
@@ -25,7 +25,7 @@ var confirm = exports.confirm = function(message, callback){
 
 var get = exports.get = function(options, callback){
 
-	if(!callback) return; // no point in continuing
+	if (!callback) return; // no point in continuing
 
 	if (typeof options != 'object')
 		return callback(new Error("Please pass a valid options object."))
@@ -41,7 +41,9 @@ var get = exports.get = function(options, callback){
 
 	var close_prompt = function(){
 		stdin.pause();
+		if (!rl) return;
 		rl.close();
+		rl = null;
 	}
 
 	var get_default = function(key){
@@ -94,7 +96,7 @@ var get = exports.get = function(options, callback){
 		if (options[key].options)
 			msg += '(options are ' + options[key].options.join(', ') + ')';
 
-		if(msg != '') stdout.write(msg + "\n");
+		if (msg != '') stdout.write(msg + "\n");
 	}
 
 	// taken from commander lib
@@ -153,7 +155,7 @@ var get = exports.get = function(options, callback){
 
 		show_message(curr_key);
 
-		if(options[curr_key].type == 'password'){
+		if (options[curr_key].type == 'password'){
 
 			var listener = stdin._events.keypress; // to reassign down later
 			stdin.removeAllListeners('keypress');
