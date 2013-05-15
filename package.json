@@ -3,7 +3,8 @@
   "name": "reply",
   "description": "Create console-based wizards in a snap.",
   "tags" : ["reply", "prompt", "console", "wizard", "input"],
-  "version": "0.2.7",
+  "version": "0.3.0",
+  "engine": "node >= 0.10",
   "repository": {
     "type": "git",
     "url" : "https://github.com/tomas/reply"
