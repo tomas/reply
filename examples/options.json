@@ -22,6 +22,7 @@
     "allow_empty": true
   },
   "married": {
+    "message": "Have you taken the big step?",
     "type": "boolean",
     "default": false
   },

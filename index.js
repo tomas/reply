@@ -1,12 +1,12 @@
 var rl, readline = require('readline');
 
-var get_interface = function(stdin, stdout){
+var get_interface = function(stdin, stdout) {
   if (!rl) rl = readline.createInterface(stdin, stdout);
   else stdin.resume(); // interface exists
   return rl;
 }
 
-var confirm = exports.confirm = function(message, callback){
+var confirm = exports.confirm = function(message, callback) {
 
   var question = {
     'reply': {
@@ -16,41 +16,42 @@ var confirm = exports.confirm = function(message, callback){
     }
   }
 
-  get(question, function(err, answer){
+  get(question, function(err, answer) {
     if (err) return callback(err);
     callback(null, answer.reply === true || answer.reply == 'yes');
   });
 
 };
 
-var get = exports.get = function(options, callback){
+var get = exports.get = function(options, callback) {
 
   if (!callback) return; // no point in continuing
 
   if (typeof options != 'object')
     return callback(new Error("Please pass a valid options object."))
 
-  var answers = {};
-  var stdin = process.stdin, stdout = process.stdout;
-  var fields = Object.keys(options);
+  var answers = {},
+      stdin = process.stdin,
+      stdout = process.stdout,
+      fields = Object.keys(options);
 
-  var done = function(){
+  var done = function() {
     close_prompt();
     callback(null, answers);
   }
 
-  var close_prompt = function(){
+  var close_prompt = function() {
     stdin.pause();
     if (!rl) return;
     rl.close();
     rl = null;
   }
 
-  var get_default = function(key){
+  var get_default = function(key) {
     return typeof options[key] == 'object' ? options[key].default : options[key];
   }
 
-  var guess_type = function(reply){
+  var guess_type = function(reply) {
 
     if (reply.trim() == '')
       return;
@@ -64,7 +65,7 @@ var get = exports.get = function(options, callback){
     return reply;
   }
 
-  var validate = function(key, answer){
+  var validate = function(key, answer) {
 
     if (typeof answer == 'undefined')
       return options[key].allow_empty || typeof get_default(key) != 'undefined';
@@ -81,13 +82,16 @@ var get = exports.get = function(options, callback){
 
   }
 
-  var show_error = function(key){
-    var msg = options[key].error ? options[key].error : "Invalid value.\n";
-    stdout.write(msg + "\n");
+  var show_error = function(key) {
+    var str = options[key].error ? options[key].error : 'Invalid value.';
+
+    if (options[key].options)
+        str += ' (options are ' + options[key].options.join(', ') + ')';
+
+    stdout.write("\033[31m" + str + "\033[0m" + "\n");
   }
 
-  var show_message = function(key){
-
+  var show_message = function(key) {
     var msg = '';
 
     if (text = options[key].message)
@@ -96,27 +100,28 @@ var get = exports.get = function(options, callback){
     if (options[key].options)
       msg += '(options are ' + options[key].options.join(', ') + ')';
 
-    if (msg != '') stdout.write(msg + "\n");
+    if (msg != '') stdout.write("\033[1m" + msg + "\033[0m\n");
   }
 
   // taken from commander lib
-  var wait_for_password = function(prompt, callback){
+  var wait_for_password = function(prompt, callback) {
 
-    var buf = '', mask = '*';
+    var buf = '',
+        mask = '*';
 
-    stdin.on('keypress', function(c, key){
+    var keypress_callback = function(c, key) {
 
-      if (key && key.name == 'enter') {
+      if (key && (key.name == 'enter' || key.name == 'return')) {
         stdout.write("\n");
         stdin.removeAllListeners('keypress');
-        stdin.setRawMode(false);
+        // stdin.setRawMode(false);
         return callback(buf);
       }
 
       if (key && key.ctrl && key.name == 'c')
         close_prompt();
 
-      if (key && key.name == 'backspace'){
+      if (key && key.name == 'backspace') {
         buf = buf.substr(0, buf.length-1);
         var masked = '';
         for (i = 0; i < buf.length; i++) { masked += mask; }
@@ -126,11 +131,13 @@ var get = exports.get = function(options, callback){
         buf += c;
       }
 
-    });
+    };
+
+    stdin.on('keypress', keypress_callback);
 
   }
 
-  var check_reply = function(index, curr_key, fallback, reply){
+  var check_reply = function(index, curr_key, fallback, reply) {
     var answer = guess_type(reply);
     var return_answer = (typeof answer != 'undefined') ? answer : fallback;
 
@@ -140,7 +147,7 @@ var get = exports.get = function(options, callback){
       show_error(curr_key) || next_question(index); // repeats current
   }
 
-  var next_question = function(index, prev_key, answer){
+  var next_question = function(index, prev_key, answer) {
     if (prev_key) answers[prev_key] = answer;
 
     var curr_key = fields[index];
@@ -155,22 +162,22 @@ var get = exports.get = function(options, callback){
 
     show_message(curr_key);
 
-    if (options[curr_key].type == 'password'){
+    if (options[curr_key].type == 'password') {
 
       var listener = stdin._events.keypress; // to reassign down later
       stdin.removeAllListeners('keypress');
 
-      stdin.setRawMode(true);
+      // stdin.setRawMode(true);
       stdout.write(prompt);
 
-      wait_for_password(prompt, function(reply){
+      wait_for_password(prompt, function(reply) {
         stdin._events.keypress = listener; // reassign
         check_reply(index, curr_key, fallback, reply)
       });
 
     } else {
 
-      rl.question(prompt, function(reply){
+      rl.question(prompt, function(reply) {
         check_reply(index, curr_key, fallback, reply);
       });
 
@@ -181,7 +188,7 @@ var get = exports.get = function(options, callback){
   rl = get_interface(stdin, stdout);
   next_question(0);
 
-  rl.on('close', function(){
+  rl.on('close', function() {
     close_prompt(); // just in case
 
     var given_answers = Object.keys(answers).length;
