@@ -48,7 +48,10 @@ var get = exports.get = function(options, callback) {
   }
 
   var get_default = function(key) {
-    return typeof options[key] == 'object' ? options[key].default : options[key];
+    if (typeof options[key] == 'object')
+      return typeof options[key].default == 'function' ? options[key].default() : options[key].default;
+    else
+      return options[key];
   }
 
   var guess_type = function(reply) {
@@ -134,7 +137,6 @@ var get = exports.get = function(options, callback) {
     };
 
     stdin.on('keypress', keypress_callback);
-
   }
 
   var check_reply = function(index, curr_key, fallback, reply) {
@@ -147,11 +149,24 @@ var get = exports.get = function(options, callback) {
       show_error(curr_key) || next_question(index); // repeats current
   }
 
+  var dependencies_met = function(conds) {
+    for (var key in conds) {
+      if (answers[key] !== conds[key])
+        return false;
+    }
+    return true;
+  }
+
   var next_question = function(index, prev_key, answer) {
     if (prev_key) answers[prev_key] = answer;
 
     var curr_key = fields[index];
     if (!curr_key) return done();
+
+    if (options[curr_key].depends_on) {
+      if (!dependencies_met(options[curr_key].depends_on))
+        return next_question(++index, curr_key, undefined);
+    }
 
     var prompt = (options[curr_key].type == 'confirm') ?
       ' - yes/no: ' : " - " + curr_key + ": ";
