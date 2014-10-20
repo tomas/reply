@@ -1,7 +1,7 @@
 var reply = require('./../');
 
 var bye = function(){
-  console.log("Ok, maybe next time.");
+  console.log('Ok, maybe next time.');
 }
 
 function get_timezone() {
@@ -11,10 +11,10 @@ function get_timezone() {
 
 var opts = {
   country: {
-    message: 'Tell me your country name'
+    message: 'What country do you live in?'
   },
   timezone: {
-    message: 'What timezone are you in?',
+    message: 'And your current timezone is?',
     default: get_timezone
   }
 }
