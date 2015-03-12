@@ -36,7 +36,7 @@ var opts = {
   },
   country: {
     message : 'Where are you now?',
-    default : my_get_country_function // fills default with return value
+    default : get_country // fills default with return value
   },
   zip_code: {
     message : 'Please enter your ZIP code.',
@@ -46,8 +46,20 @@ var opts = {
   }
 }
 
+function get_country(answers) {
+  // answers contains the values given up to this point.
+  if (answers.username == 'billgates')
+    return 'US';
+  else // we'll simply guess it from the LANG variable
+    return process.env.LANG.split(/_|\./)[1]; 
+}
+
 reply.get(opts, function(err, answers) {
-  console.log(answers);
+  console.log(answers); 
+  /* { username: 'billgates',
+       password: '123456',
+       country: 'US',
+       zip_code: 0 } */
 });
 ```
 
@@ -80,4 +92,4 @@ Written by Tomás Pollak.
 
 Copyright
 -------
-(c) 2012 Fork Ltd. MIT license.
+(c) Fork Ltd. MIT license.
