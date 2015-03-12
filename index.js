@@ -47,9 +47,9 @@ var get = exports.get = function(options, callback) {
     rl = null;
   }
 
-  var get_default = function(key) {
+  var get_default = function(key, partial_answers) {
     if (typeof options[key] == 'object')
-      return typeof options[key].default == 'function' ? options[key].default() : options[key].default;
+      return typeof options[key].default == 'function' ? options[key].default(partial_answers) : options[key].default;
     else
       return options[key];
   }
@@ -171,7 +171,7 @@ var get = exports.get = function(options, callback) {
     var prompt = (options[curr_key].type == 'confirm') ?
       ' - yes/no: ' : " - " + curr_key + ": ";
 
-    var fallback = get_default(curr_key);
+    var fallback = get_default(curr_key, answers);
     if (typeof(fallback) != 'undefined' && fallback !== '')
       prompt += "[" + fallback + "] ";
 
