@@ -25,8 +25,16 @@ Usage
 var reply = require('reply');
 
 var opts = {
+  name: {
+    message: 'Please type in your name.',
+    allow_empty: false // will require an answer
+  },
   username: {
-    message : 'Please type in your username.'
+    default: 'nobody' // if left empty, will fall back to this value
+    type: 'string'    // ensure value is not a number
+  },
+  gender: {
+    options: ['Male', 'Female', 'Robot', 'Rather not say']
   },
   password: {
     message : 'Password, please.',
@@ -36,10 +44,11 @@ var opts = {
   },
   country: {
     message : 'Where are you now?',
-    default : get_country // fills default with return value
+    default : get_country 
   },
   zip_code: {
     message : 'Please enter your ZIP code.',
+    type    : 'number', // reply uses the JS primitives, as returned by `typeof var`
     depends_on: {
       country: 'US'
     }
@@ -56,7 +65,9 @@ function get_country(answers) {
 
 reply.get(opts, function(err, answers) {
   console.log(answers); 
-  /* { username: 'billgates',
+  /* { name: 'Bill Gates', 
+       username: 'billgates',
+       gender: 'Robot', 
        password: '123456',
        country: 'US',
        zip_code: 12345 } */
@@ -76,7 +87,7 @@ reply.confirm('Are you up for it?', function(err, yes) {
 Options
 -------
 
- - message : What's displayed when requesting the user's input.
+ - message : What's displayed when requesting the user's input. Optional, though helpful.
  - default : Default value in case user just presses the enter key. Can be a value or a function that returns a value.
  - depends_on: Key/val object containing the previous answers from which a specific entry depends on. Check the depends-on.js example for a use case.
 
