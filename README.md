@@ -26,15 +26,15 @@ var reply = require('reply');
 
 var opts = {
   name: {
-    message: 'Please type in your name.',
+    message : 'Please type in your name.',
     allow_empty: false // will require an answer
   },
   username: {
-    default: 'nobody' // if left empty, will fall back to this value
-    type: 'string'    // ensure value is not a number
+    default : 'nobody' // if left empty, will fall back to this value
+    type    : 'string'    // ensure value is not a number
   },
   gender: {
-    options: ['Male', 'Female', 'Robot', 'Rather not say']
+    options : ['Male', 'Female', 'Robot', 'Rather not say']
   },
   password: {
     message : 'Password, please.',
@@ -44,7 +44,7 @@ var opts = {
   },
   country: {
     message : 'Where are you now?',
-    default : get_country 
+    default : get_country // use the function below to provide a default/fallback answer
   },
   zip_code: {
     message : 'Please enter your ZIP code.',
@@ -90,10 +90,10 @@ Options
  - message : What's displayed when requesting the user's input. Optional, though helpful.
  - default : Default value in case user just presses the enter key. Can be a value or a function that returns a value.
  - depends_on: Key/val object containing the previous answers from which a specific entry depends on. Check the depends-on.js example for a use case.
-
  - type    : Determines the type of response that is expected to the valid. Possible values are: string, password, number, or boolean.
  - options : Array of elements from which the user is expected to give a valid answer from.
  - regex   : Validates response against the given regex.
+ - allow_empty: Disallows empty answers.
 
 You can find a few more use cases in the examples directory.
 
