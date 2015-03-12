@@ -59,7 +59,7 @@ reply.get(opts, function(err, answers) {
   /* { username: 'billgates',
        password: '123456',
        country: 'US',
-       zip_code: 0 } */
+       zip_code: 12345 } */
 });
 ```
 
