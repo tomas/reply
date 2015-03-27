@@ -151,9 +151,19 @@ var get = exports.get = function(options, callback) {
 
   var dependencies_met = function(conds) {
     for (var key in conds) {
-      if (answers[key] !== conds[key])
-        return false;
+      var cond = conds[key];
+      if (cond.not) { // object, inverse
+        if (answers[key] === cond.not)
+          return false;
+      } else if (cond.in) { // array 
+        if (cond.in.indexOf(answers[key]) == -1) 
+          return false;
+      } else {
+        if (answers[key] !== cond)
+          return false; 
+      }
     }
+
     return true;
   }
 
