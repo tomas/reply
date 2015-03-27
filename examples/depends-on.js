@@ -10,6 +10,16 @@ function get_timezone() {
 }
 
 var opts = {
+  planet: {
+    message: 'What planet are you on?',
+    options: ['Earth', 'Mars', 'Jupiter', 'Venus', 'Saturn']
+  },
+  not_earth_question: {
+    message: 'REALLY? How are you connected to the Internet?',
+    depends_on: {
+      planet: { not: 'Earth' }
+    }
+  },
   first_question: {
     message: 'Guess the right number. Five options.',
     options: [1,2,3,4,5]
